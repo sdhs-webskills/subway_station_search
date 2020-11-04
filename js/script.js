@@ -69,4 +69,9 @@ function showList(infos){
     $('.timer>h1').remove()
     $('.timer').append(`<h1>${(endTime - startTime)/1000}초</h1>`)
 }
-    
+
+// feat: 기능추가
+// refactor: 개선
+// docs: 문서
+// chore: 기능상의 변화는 없음
+// fix: 오류 수정, 버그 수정
