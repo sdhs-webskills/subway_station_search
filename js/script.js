@@ -50,24 +50,21 @@ function showRecommended(recommended, input){
     $('.autocomplete>ul').empty()
 
     //역명에서 입력된 값을 빨간 글자로 변경하기 위한 변수
-    var replaceLetter = `<p class="redChar">${input}</p>`
-
-    var inputLength = input.length
-
+    
     //역 목록의 길이만큼, 최대 10번 반복
     for(var i = 0; i < recommended.length && i < 10; i++){
+        const redLetter = `<p class="redChar">${input.charAt(i)}</p>`
         
         //출력할 내용 변수
-        var result = `${(recommended[i].station_nm+recommended[i].line_num)}호선`
+        const result = `${(recommended[i].station_nm+recommended[i].line_num)}호선`
 
         //출력할 내용에서 입력값과 같은 부분을 replaceLetter 변수의 값으로 변환함
-        result = result.replace(result.charAt(result.indexOf(input)).toString(),replaceLetter)
-        for(var j = 1; j < inputLength; j++){
-            result = result.replace(result.charAt(result.indexOf(input)+i).toString(),'')
+        for(let j = 0; j < input.length; j++){
+            result = result.replaceAll(result.charAt(result.indexOf(input.charAt(i))).toString(),replaceLetter)
         }
 
         //result 변수의 값을 li태그에 담아 자동완성 리스트에 추가
-        $('.autocomplete>ul').append('<li>'+result+'</li>')
+        $('.autocomplete>ul').append(`<li><p class="redChar">${redLetter}</p>${result}</li>`)
     }
 }
 
@@ -116,6 +113,7 @@ function showList(infos){
                     <p>${outStTimeInfo.last_time}</p>`
         }
         if(outStTimeInfo == undefined&&inStTimeInfo == undefined){result+='<h1>정보가 없습니다</h1>'}
+        inStTimeInfo != undefined ? 
         result+='</div>'
     }
     $('.result').append(result)
