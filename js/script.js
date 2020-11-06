@@ -73,6 +73,9 @@ $(".search").on('submit', function () {
 
     //입력값을 읽어와 변수로 저장
     var stNm = $("input").val();
+    
+    //역정보 목록 초기화
+    $('.result').empty();
 
     if(stNm == ''){//입력값이 비어있을경우 모든 역 목록을 보여줌
         showList(mappedStationList)
@@ -81,8 +84,6 @@ $(".search").on('submit', function () {
         //역정보 객체에서 역명이 검색한 역명과 같은 객체만 가져와 stInfo 변수에 저장
         var stInfo = mappedStationList.filter(x => x.station_nm == `${stNm}`);
 
-        //역정보 목록 초기화
-        $('.result').empty();
 
         //역정보 목록을 띄워주는 함수에 stInfo배열을 넘겨줌
         showList(stInfo);
@@ -95,25 +96,17 @@ function showList(infos){
 
     //함수 시작시간 기록
     var startTime = new Date().getTime();
-    var result = ``;
+    var result = ''
     for(var i in infos){
         var inStTimeInfo = upwardTimeList.filter(x=> x.fr_code == infos[i].fr_code)[0]
         var outStTimeInfo = upwardTimeList.filter(x=> x.fr_code == infos[i].fr_code)[0]
         result+=`<div class="stInfo">
                 <h1>${infos[i].station_nm}</h1>
                 <p>${infos[i].line_num}호선</p>`
-        if(inStTimeInfo != undefined){
-            result += `<h1>상행선</h1>
-                    <p>${inStTimeInfo.first_time}</p>
-                    <p>${inStTimeInfo.last_time}</p>`
-        }
-        if(outStTimeInfo != undefined){
-            result += `<h1>하행선</h1>
-                    <p>${outStTimeInfo.first_time}</p>
-                    <p>${outStTimeInfo.last_time}</p>`
-        }
-        if(outStTimeInfo == undefined&&inStTimeInfo == undefined){result+='<h1>정보가 없습니다</h1>'}
-        inStTimeInfo != undefined ? 
+        inStTimeInfo == undefined ? outStTimeInfo == undefined ? result+='<h1>정보가 없습니다</h1>' : result += `<h1>하행선</h1><p>${outStTimeInfo.first_time}</p><p>${outStTimeInfo.last_time}</p>`
+        : outStTimeInfo == undefined ? result += `<h1>상행선</h1><p>${inStTimeInfo.first_time}</p><p>${inStTimeInfo.last_time}</p>` 
+        : result += `<h1>상행선</h1><p>${inStTimeInfo.first_time}</p><p>${inStTimeInfo.last_time}</p>
+                     <h1>하행선</h1><p>${outStTimeInfo.first_time}</p><p>${outStTimeInfo.last_time}</p>` ;
         result+='</div>'
     }
     $('.result').append(result)
