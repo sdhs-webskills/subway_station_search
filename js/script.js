@@ -27,20 +27,30 @@ window.onload = function checkDate(infos){
 //     }
 // }
 
-//검색창에서 키 입력 감지시 자동완성 목록을 보여주는 함수 실행
-$('.search').keyup(function(){
-    if($('input').val() != ''){ //입력값이 비어있을때 작동하지 않도록 조건문 설정
-        //역 목록에서 역 이름에 입력값이 포함된 객체만 가져와 배열로 저장
-        var recommended = mappedStationList.filter(x => x.station_nm.indexOf($("input").val()) != -1)
-        //가져온 역 목록을 이름에 맞게 정렬
-        recommended.sort((a,b)=>a.station_nm < b.station_nm ? -1 : a.station_nm > b.station_nm ? 1 : 0);
-        //정렬된 역 목록 배열과 입력값을 추천목록을 보여주는 함수의 인자로 넘겨주며 호출
-        showRecommended(recommended, $("input").val())
+//검색창에서 키 입력 후 키를 뗄 시 자동완성 목록을 보여주는 함수 실행
+$('.search').keyup(function(key){
+    
+    console.log(key.keyCode)
+    //입력값이 비어있을때 작동하지 않도록 조건문 설정
+    if($('input').val() != '' || key.keyCode != 13){
+
+        //방향키와 엔터키 입력이 아닐경우에 발동
+        if((key.keyCode<37 || key.keyCode>40)){
+
+            //역 목록에서 역 이름에 입력값이 포함된 객체만 가져와 배열로 저장
+            var recommended = mappedStationList.filter(x => x.station_nm.indexOf($("input").val()) != -1)
+            
+            //가져온 역 목록을 이름에 맞게 정렬
+            recommended.sort((a,b)=>a.station_nm < b.station_nm ? -1 : a.station_nm > b.station_nm ? 1 : 0);
+            
+            //정렬된 역 목록 배열과 입력값을 추천목록을 보여주는 함수의 인자로 넘겨주며 호출
+            showRecommended(recommended, $("input").val())
+        }
     } else {
         //입력값이 빌 시 자동완성 목록을 없앰
         $('.autocomplete>ul').empty()
     }
-})
+})           
 
 
 //역 목록과 입력된 값을 받아 역 목록을 최대 10개까지 보여주는 함수
@@ -53,20 +63,23 @@ function showRecommended(recommended, input){
     
     //역 목록의 길이만큼, 최대 10번 반복
     for(var i = 0; i < recommended.length && i < 10; i++){
-        const redLetter = `<p class="redChar">${input.charAt(i)}</p>`
+        const redLetter = `<p class="redChar">${input}</p>`
         
         //출력할 내용 변수
-        const result = `${(recommended[i].station_nm+recommended[i].line_num)}호선`
+        let result = `${(recommended[i].station_nm+recommended[i].line_num)}호선`
 
-        //출력할 내용에서 입력값과 같은 부분을 replaceLetter 변수의 값으로 변환함
-        for(let j = 0; j < input.length; j++){
-            result = result.replaceAll(result.charAt(result.indexOf(input.charAt(i))).toString(),replaceLetter)
-        }
+        //출력할 내용에서 입력값과 같은 부분을 지움
+        result = result.replaceAll(`${input}`,`<p class="redChar">${input}</p>`)
 
         //result 변수의 값을 li태그에 담아 자동완성 리스트에 추가
-        $('.autocomplete>ul').append(`<li><p class="redChar">${redLetter}</p>${result}</li>`)
+        $('.autocomplete>ul').append(`<li>${result}</li>`)
     }
+    // selectOnRecommended(recommended.length);
 }
+
+function selectOnRecommended(length){
+    // var
+};
 
 //역 이름 입력창에서 전송시 역정보 목록을 찾아 띄워주는 함수 실행
 $(".search").on('submit', function () {
@@ -76,7 +89,7 @@ $(".search").on('submit', function () {
     
     //역정보 목록 초기화
     $('.result').empty();
-
+    
     if(stNm == ''){//입력값이 비어있을경우 모든 역 목록을 보여줌
         showList(mappedStationList)
     } else {//입력값이 있을경우
@@ -84,6 +97,8 @@ $(".search").on('submit', function () {
         //역정보 객체에서 역명이 검색한 역명과 같은 객체만 가져와 stInfo 변수에 저장
         var stInfo = mappedStationList.filter(x => x.station_nm == `${stNm}`);
 
+        //검색 시 자동완성 리스트 없앰
+        $('.autocomplete>ul').empty()
 
         //역정보 목록을 띄워주는 함수에 stInfo배열을 넘겨줌
         showList(stInfo);
@@ -100,13 +115,12 @@ function showList(infos){
     for(var i in infos){
         var inStTimeInfo = upwardTimeList.filter(x=> x.fr_code == infos[i].fr_code)[0]
         var outStTimeInfo = upwardTimeList.filter(x=> x.fr_code == infos[i].fr_code)[0]
-        result+=`<div class="stInfo">
-                <h1>${infos[i].station_nm}</h1>
-                <p>${infos[i].line_num}호선</p>`
-        inStTimeInfo == undefined ? outStTimeInfo == undefined ? result+='<h1>정보가 없습니다</h1>' : result += `<h1>하행선</h1><p>${outStTimeInfo.first_time}</p><p>${outStTimeInfo.last_time}</p>`
-        : outStTimeInfo == undefined ? result += `<h1>상행선</h1><p>${inStTimeInfo.first_time}</p><p>${inStTimeInfo.last_time}</p>` 
-        : result += `<h1>상행선</h1><p>${inStTimeInfo.first_time}</p><p>${inStTimeInfo.last_time}</p>
-                     <h1>하행선</h1><p>${outStTimeInfo.first_time}</p><p>${outStTimeInfo.last_time}</p>` ;
+        result+=`<div class="stInfo"><h1>${infos[i].station_nm}</h1><p>${infos[i].line_num}호선</p>`
+        inStTimeInfo == undefined ? outStTimeInfo == undefined ? result+='<h1>정보가 없습니다</h1>' 
+                                                               : result += `<h1>하행선</h1><p>${outStTimeInfo.first_time}<br>${outStTimeInfo.last_time}</p>`
+                                  : outStTimeInfo == undefined ? result += `<h1>상행선</h1><p>${inStTimeInfo.first_time}<br>${inStTimeInfo.last_time}</p>` 
+                                                               : result += `<h1>상행선</h1><p>${inStTimeInfo.first_time}<br>${inStTimeInfo.last_time}</p><h1>하행선</h1><p>${outStTimeInfo.first_time}<br>${outStTimeInfo.last_time}</p>` 
+        ;
         result+='</div>'
     }
     $('.result').append(result)
