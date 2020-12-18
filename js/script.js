@@ -12,22 +12,6 @@ window.onload = function(){
     //console.log(target.match(regExp));
 }
 
-
-// function recommend() {
-    //let value = search.querySelector('input').value //value에 input
-    //value = value.replace(" ", ""); //value 튀어쓰기를 공백으러 바꾸기
-    //if (value != "") { //input받은 값이 공백이 아니면 if문 실행
-    //    let rrr = staitionData.filter((rc) => { //staitionData 배열의 값들을 순차적으로 함수에 인자로 전달하고 실행하는것
-    //        // console.log(rc.station_nm.indexOf(value))
-    //        if (rc.station_nm.indexOf(value) != -1) { //rc에 필터된 station_nm의 input에 친 값이 없으면 -1이 나오는데 -1아 아니면 if 실헹
-    //            let result = rc.station_nm //
-    //            return result
-    //        }
-    //    })
-    //    console.log(rrr)
-    //}
-// }
-
 // 지하철 역명 배열
 const station = [];
 for (let i=0; i < stationList.data.length; i++) {
