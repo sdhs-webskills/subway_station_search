@@ -1,22 +1,25 @@
 const staitionData = stationList.data
 let search = document.querySelector('.search') //search 태그를 가져와서 변수로 저장 
 let button = search.querySelector('button') //button 태그를 가져와서 변수로 저장
-let input = document.querySelector('input')
-input.addEventListener('keydown', recommend)
+let input = document.querySelector('input') //input태그를 가져와서 변수 선언
+input.addEventListener('keyup', recommend) //input에 keyup 되었을때 recommend함수 실행
 button.addEventListener('click', nameSearch) //button에 클릭할때 nameSearch를 실행
 
 function recommend() {
-    let value = search.querySelector('input').value
-    let va = value.replace(" ");
 
-    let rrr = staitionData.filter((rc) => {
-        console.log(rc.station_nm.indexOf(va))
-        if (rc.station_nm.indexOf(va) != -1) {
+    let value = search.querySelector('input').value //value에 input
+    value = value.replace(" ", ""); //value 튀어쓰기를 공백으러 바꾸기
+    if (value != "") { //input받은 값이 공백이 아니면 if문 실행
+        let rrr = staitionData.filter((rc) => { //staitionData 배열의 값들을 순차적으로 함수에 인자로 전달하고 실행하는것
+            // console.log(rc.station_nm.indexOf(value))
+            if (rc.station_nm.indexOf(value) != -1) { //rc에 필터된 station_nm의 input에 친 값이 없으면 -1이 나오는데 -1아 아니면 if 실헹
+                let result = rc.station_nm //
+                return result
+            }
+        })
+        console.log(rrr)
+    }
 
-            return rc.station_nm
-        }
-    })
-    // console.log(rrr)
 }
 
 function nameSearch() {
