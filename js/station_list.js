@@ -3,7 +3,7 @@ var stationList = {
     "station_nm" : "전철역명",
     "station_cd" : "전철역코드",
     "line_num" : "호선",
-    "fr_code" : "외부코드"
+    "fr_code" : "외부코드" 
   },
   "data" : [ {
     "station_nm" : "교대",
