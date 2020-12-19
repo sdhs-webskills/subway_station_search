@@ -1,5 +1,5 @@
 const staitionData = stationList.data
-
+const timedata = timeList.data
 let search = document.querySelector('.search') //search 태그를 가져와서 변수로 저장 
 let button = search.querySelector('button') //button 태그를 가져와서 변수로 저장
 let input = document.querySelector('input') //input태그를 가져와서 변수 선언
@@ -24,14 +24,16 @@ function recommend() {
         while (autocomplete.firstChild) autocomplete.removeChild(autocomplete.firstChild)
         let searchResult = autoSearch.map((obj) => Object.values(obj)[0]);
         // console.log(searchResult)
-        let aa = document.createElement('li')
-        aa.innerText = searchResult
-        autocomplete.appendChild(aa)
-        autocomplete.appendChild(aa)
+        let autocompleteLi = document.createElement('li')
+        autocompleteLi.innerText = searchResult
+        autocomplete.appendChild(autocompleteLi)
+        autocomplete.appendChild(autocompleteLi)
     }
     // 일단 가져와 태그를
     // auto밑 ul에 li생성
     // 그 리스트에 autoSearch을 넣어조
+    //일단 없다가 나중에 생겨야지
+    // 
 }
 
 
@@ -46,24 +48,32 @@ function nameSearch() {
             return it //같으면 리턴
         }
     })
+
     let result = document.querySelector('.result') //result에 result클래스를 가져옴
     while (result.firstChild) result.removeChild(result.firstChild) //result의 자식이 없어질때 까지 지운다 firstChild가 지워지면 두번재 자식이 firstChlid가 되서 계속 지워짐
-    for (let i = 0; i < searched.length; i++) { // 
+    for (let i = 0; i < searched.length; i++) { //
+
         let node = document.createElement('div') //node생성 
         node.classList.add('res') //node생성된 div에 res를 넣어준다 
         let st_nmNode = document.createElement('h1') //node 생성
         let st_nm = document.createTextNode(searched[i].station_nm + '역') //if문 돌아간거에 i번째 배열의 station_nm + 문자열이니까 +'역'을 textnode에 넣어준다
         let line_numNode = document.createElement('h1') //node 생성
         let line_num = document.createTextNode(searched[i].line_num + '호선') ///if문 돌아간거에 i번째 배열의 line_num + 문자열이니까 +'역'을 textnode에 넣어준다
+        let first = document.createElement('h1')
+        let firstTime = document.createTextNode('첫차시간' + timeList.data[sea].first_time)
         line_numNode.appendChild(line_num) //line_numNode에 line_num을 자식요소로 넣어준다
         st_nmNode.appendChild(st_nm) //st_nmNnode에 st_nm을 자식요소로 넣어준다
+        first.appendChild(firstTime)
         node.appendChild(st_nmNode)
         node.appendChild(line_numNode)
+        node.appendChild(first)
         result.appendChild(node) //div에 res가 넣어진 node를 .result자식 요소로 넣어준다
+        // console.log(timedata[i])
 
     }
+
 }
 
 
 
-//value 값이 지하철 리스트 이름과 같은지 돌려봐야지 맞죠?
+//value 값이 지하철 리스트 이름과 같은지 돌려봐야지 맞죠
