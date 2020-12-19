@@ -3,7 +3,7 @@ var timeList = {
     "f_deststation" : "첫차도착역코드",
     "week_tag" : "요일",
     "station_cd" : "전철역코드",
-    "line_num" : "호선",
+    "line_num" : "호선", 
     "inout_tag" : "상/하행선",
     "first_time" : "첫차시간",
     "last_time" : "막차시간",
