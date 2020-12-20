@@ -9,7 +9,7 @@ button.addEventListener('click', nameSearch) //button에 클릭할때 nameSearch
 
 //자동완성
 function recommend() {
-
+    
     let value = search.querySelector('input').value //value에 input
     value = value.replace(" ", ""); //value 튀어쓰기를 공백으러 바꾸기
     if (value != "") { //input받은 값이 공백이 아니면 if문 실행
@@ -20,60 +20,40 @@ function recommend() {
                 return result
             }
         })
+        let autoSearchResult = autoSearch.map((obj) => Object.values(obj)[0]);
         let autocomplete = document.querySelector('.autocomplete ul')
-        while (autocomplete.firstChild) autocomplete.removeChild(autocomplete.firstChild)
-        let searchResult = autoSearch.map((obj) => Object.values(obj)[0]);
-        // console.log(searchResult)
-        let autocompleteLi = document.createElement('li')
-        autocompleteLi.innerText = searchResult
-        autocomplete.appendChild(autocompleteLi)
-        autocomplete.appendChild(autocompleteLi)
+        
+        autocomplete.innerHTML = ""
+        // console.log(autoSearchResult)
+        
+        for(let i = 0; i < autoSearchResult.length && i<10; i++){
+        let autocompleteLi = [];
+        autoSearchResult.sort();
+        autocompleteLi[i] = document.createElement('li')
+        autocompleteLi[i].innerHTML = autoSearchResult[i]
+        autocomplete.appendChild(autocompleteLi[i])    
+        }
     }
-    // 일단 가져와 태그를
-    // auto밑 ul에 li생성
-    // 그 리스트에 autoSearch을 넣어조
-    //일단 없다가 나중에 생겨야지
-    // 
 }
 
 
 
 
 //검색
-function nameSearch() {
-    let value = search.querySelector('input').value //변수search의 input 태그의 값을 value를 넣어준다
-
-    let searched = staitionData.filter((it) => { //filter = staitionData 배열의 값들을 순차적으로 함수에 인자로 전달하고 실행시키는것 
-        if (it.station_nm == value) { //it로 넘겨진 깂이 value(input)에 들어온 값과 같냐는 반복문
-            return it //같으면 리턴
-        }
-    })
-
-    let result = document.querySelector('.result') //result에 result클래스를 가져옴
-    while (result.firstChild) result.removeChild(result.firstChild) //result의 자식이 없어질때 까지 지운다 firstChild가 지워지면 두번재 자식이 firstChlid가 되서 계속 지워짐
-    for (let i = 0; i < searched.length; i++) { //
-
-        let node = document.createElement('div') //node생성 
-        node.classList.add('res') //node생성된 div에 res를 넣어준다 
-        let st_nmNode = document.createElement('h1') //node 생성
-        let st_nm = document.createTextNode(searched[i].station_nm + '역') //if문 돌아간거에 i번째 배열의 station_nm + 문자열이니까 +'역'을 textnode에 넣어준다
-        let line_numNode = document.createElement('h1') //node 생성
-        let line_num = document.createTextNode(searched[i].line_num + '호선') ///if문 돌아간거에 i번째 배열의 line_num + 문자열이니까 +'역'을 textnode에 넣어준다
-        let first = document.createElement('h1')
-        let firstTime = document.createTextNode('첫차시간' + timeList.data[sea].first_time)
-        line_numNode.appendChild(line_num) //line_numNode에 line_num을 자식요소로 넣어준다
-        st_nmNode.appendChild(st_nm) //st_nmNnode에 st_nm을 자식요소로 넣어준다
-        first.appendChild(firstTime)
-        node.appendChild(st_nmNode)
-        node.appendChild(line_numNode)
-        node.appendChild(first)
-        result.appendChild(node) //div에 res가 넣어진 node를 .result자식 요소로 넣어준다
-        // console.log(timedata[i])
-
-    }
-
-}
+function nameSearch() { 
+    let result = document.querySelector('.result') //result에 result클래스를 가져옴 
+    result.innerHTML =  "" //result의 자식이 없어질때 까지 지운다 firstChild가 지워지면 두번재 자식이 firstChlid가 되서 계속 지워짐
+    let value = search.querySelector('input').value //변수search의 input 태그의 값을 value를 넣어준다 
+    staitionData.filter(({station_nm}) => station_nm == value).forEach(({station_nm,line_num}) => {
+        const st_nm = station_nm
+        const li_num = line_num
+        let node = document.createElement('div')
+        result.appendChild(node)
+        node.classList.add('res')
+        node.innerHTML = `<div> ${st_nm}역</br> ${li_num}호선</div>`
+    }); 
+ }
 
 
 
-//value 값이 지하철 리스트 이름과 같은지 돌려봐야지 맞죠
+
