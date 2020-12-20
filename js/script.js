@@ -1,81 +1,75 @@
-//write...
-const search_key = document.getElementsByName('search_key')[0]; //name이 search_key이라는 객체를 가져옴
-search_key.classList.add('input');
-let input_value = new String(); // input_value이라는 변수를 문자열로 복제?
+//write... 
+document.querySelector('button').addEventListener('click', search) // button 클릭시 search함수 실행
+document.querySelector('input').addEventListener('input', autocomplete) // input의 값 변경시 autocomplete 함수 실행
+//body 밖에 script태그가 있으면 window.onload 사용
 
-window.onload = function(){
-    Search();
-    AutoComplete();
-}
-
-
-// 지하철 역명 배열
-const station = [];
-for (let i=0; i < stationList.data.length; i++) {
-    station.push(stationList.data[i].station_nm);
-}
-//
-
-function AutoComplete(){// 자동완성 해주는 함수
-    search_key.addEventListener('input', function () {
-        input_value = this.value;
-            let stat = stationList.data.filter((data) => { 
-                // console.log(data.station_nm.indexOf(this.value))
-                if (data.station_nm.indexOf(input_value) != -1) { 
-                    let result = data.station_nm
-                    return result
-                }
-            })
-            const result = stat.map((obj) => Object.values(obj)[0]);
-            let autocomplete = document.querySelector('.autocomplete ul');
-            
-            
-            while (autocomplete.firstChild) autocomplete.removeChild(autocomplete.firstChild)
-            for(let i=0; i<result.length;i++){
-                let li =[i];
-                li[i] = document.createElement('li');
-                li[i].classList.add('li');
-                autocomplete.appendChild(li[i])
-                // console.log(result[i]);
-                li[i].innerText = result[i];
-                // console.log(li.length);
-                if(li.length > 10){
-                    li[11].remove()
-                }
-            }
+function autocomplete(){// 자동완성 해주는 함수
+        let stat = stationList.data.filter((data) => {  // filter로 data안에 station_nm과 같은 값 선언
+        if (data.station_nm.indexOf(this.value) != -1) { // input입력 값과 역이름이 값을때 역이름 반환
+            return data.station_nm
         }
-    );
-    
+    })
+    const result = stat.map((obj) => obj.station_nm); // 역이름
+    let autocomplete = document.querySelector('.autocomplete ul'); // .autocomplete ul 선언
+    while (autocomplete.firstChild) autocomplete.removeChild(autocomplete.firstChild) // 첫번째 자식이 말고 다른 자식을 입력 받을 때 첫번쨰 자식 삭제
+    for(let i=0; i<result.length && i < 10;i++){ // 역이름
+        let li =[];
+        li[i] = document.createElement('li');
+        li[i].classList.add('li');
+        autocomplete.appendChild(li[i])
+        li[i].innerText = result[i];
+        if(this.value == " "){ // input에 값이 없을때 실행
+            li[i].classList.remove();
+        }
+    }
 };
 
+let station_data = stationList.data; // stationList의 data
+let time_data = timeList.data; // timeList의 data
 
-
-
-
-
-function Search(){ // 검색 해주는 함수
-    let res = document.createElement('div');
-    res.classList.add('res')
-    document.body.appendChild(res);
-    search_key.addEventListener('input', function () { //search_key의 value갑이 변할때마다 함수 실행
-        input_value = this.value; // input_value 안에 바뀐 value값 실시간으로 반환
-        // console.log(station.indexOf(input_value));        
-        
-        let search_btm = document.getElementsByTagName('button')[0]; // 검색 버튼을 불러옴
-        search_btm.addEventListener('click', function(){ // 검색버튼 클릭시 함수 실행
-            //let a = station.filter(function(data){
-            //    if(data == input_value){
-            //        return data
-            //    }
-            //})
-            for(let i=0;i<station.length; i++){
-                if(station[i].indexOf(input_value) != -1){
-                     res.innerText = "역명: "+ station[i] + "\n"
-                     + "호선: " +stationList.data[i].line_num +"호선" + "\n"
-                     + "첫차: " +timeList.data[i].first_time + "\n"
-                     + "막차: " +timeList.data[i].last_time + "\n"
-                }
-            } 
-        })
+function search(){
+    // inuput값 가져오기
+    let input = document.querySelector('input').value; // input의 입력 받은 value값 선언
+    // filter로 input값에 맞는 데이터 추출
+    let stat = station_data.filter(function(data){ // filter로 data안에 station_nm과 같은 값 선언
+        return data.station_nm == input
     })
+    const result_nm = stat.map((obj) => obj.station_nm); // 역이름
+    const result_ln = stat.map((obj) => obj.line_num); // 역노선
+    // 데이터를 넣을 곳 생성
+    let re = document.querySelector('.result');  // .result 선언
+    re.innerHTML =  "" // re안에 있는 객체 초기화
+    
+    // 추출한 데이터를 안에 넣기
+    for(let i=0; i< stat.length; i++){ //stat의 개수만큼 for문이 돔
+        let res = [];
+        res[i] = document.createElement('div'); // 돔객체 생성
+        res[i].classList.add('res') // 클래스명 지정
+        re.appendChild(res[i]) //re안에 자식요소로 넣기
+        res[i].innerText = "역명: " + result_nm[i] + "\n"  // 정보 삽입
+        + result_ln[i] + "호선"+"\n"
+    }
 }
+
+
+
+
+// function Search(){ // 검색 해주는 함수
+
+//     let search_btm = document.getElementsByTagName('button')[0]; // 검색 버튼을 불러옴
+//     search_btm.addEventListener('click', function(){ // 검색버튼 클릭시 함수 실행
+//         for(let i=0;i<station.length; i++){ // for문으로 역명의 개수만큼 돌림
+//             if(station[i].indexOf(input_value) != -1){ // 만약 index(input_value)의 값이 -1이 아니라면 if문을 실행
+//                 let re = document.querySelector('.result'); // re에 .result 
+//                 let res = document.createElement('div');
+//                 re.classList.add('res')
+//                 res.innerText = "역명: "+ station[i] + "\n"
+//                 + "호선: " +stationList.data[i].line_num +"호선" + "\n"
+//                 + "첫차: " +timeList.data[i].first_time + "\n"
+//                 + "막차: " +timeList.data[i].last_time + "\n"
+//                 re.appendChild(res);
+//             } 
+//         } 
+//     })
+// }
+
