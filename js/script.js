@@ -4,23 +4,24 @@ document.querySelector('input').addEventListener('input', autocomplete) // input
 //body 밖에 script태그가 있으면 window.onload 사용
 
 function autocomplete(){// 자동완성 해주는 함수
+    let value = this.value.replace(" ", ""); 
         let stat = stationList.data.filter((data) => {  // filter로 data안에 station_nm과 같은 값 선언
         if (data.station_nm.indexOf(this.value) != -1) { // input입력 값과 역이름이 값을때 역이름 반환
             return data.station_nm
         }
     })
+
     const result = stat.map((obj) => obj.station_nm); // 역이름
     let autocomplete = document.querySelector('.autocomplete ul'); // .autocomplete ul 선언
     while (autocomplete.firstChild) autocomplete.removeChild(autocomplete.firstChild) // 첫번째 자식이 말고 다른 자식을 입력 받을 때 첫번쨰 자식 삭제
     for(let i=0; i<result.length && i < 10;i++){ // 역이름
-        let li =[];
-        li[i] = document.createElement('li');
-        li[i].classList.add('li');
-        autocomplete.appendChild(li[i])
-        li[i].innerText = result[i];
-        if(this.value == " "){ // input에 값이 없을때 실행
-            li[i].classList.remove();
-        }
+        // let li =[];
+        let li = document.createElement('li');
+        // li[i].classList.add('li');
+        // li[i].innerHTML = result[i];
+        // li[i].innerHTML = result[i].replaceAll(value, `<span class="text-red">${value}</span>`)
+        li.innerHTML = result[i].replaceAll(value, `<span class="highlight">${value}</span>`);
+        autocomplete.appendChild(li);
     }
 };
 
