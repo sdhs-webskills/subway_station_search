@@ -34,7 +34,7 @@ body {
 }
 
 .autocomplete>ul>li>span {
-    color: white;
+    /* color: white; */
     cursor: pointer;
 }
 

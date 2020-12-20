@@ -9,7 +9,7 @@ button.addEventListener('click', nameSearch) //button에 클릭할때 nameSearch
 
 //자동완성
 function recommend() {
-    
+
     let value = search.querySelector('input').value //value에 input
     value = value.replace(" ", ""); //value 튀어쓰기를 공백으러 바꾸기
     if (value != "") { //input받은 값이 공백이 아니면 if문 실행
@@ -19,22 +19,20 @@ function recommend() {
                 return rc
             }
         })
-        let autoSearchResult = autoSearch.map((obj) =>{
+        let autoSearchResult = autoSearch.map((obj) => {
             return obj.station_nm
-
         });
-    
+
         let autocomplete = document.querySelector('.autocomplete ul')
-        
+
         autocomplete.innerHTML = ""
-        // console.log(autoSearchResult)
-        
-        for(let i = 0; i < autoSearchResult.length && i<10; i++){
-        let autocompleteLi = [];
         autoSearchResult.sort();
-        autocompleteLi[i] = document.createElement('li')
-        autocompleteLi[i].innerHTML = autoSearchResult[i]
-        autocomplete.appendChild(autocompleteLi[i])    
+
+
+        for (let i = 0; i < autoSearchResult.length && i < 10; i++) {
+            let autocompleteLi = document.createElement('li')
+            autocompleteLi.innerHTML = autoSearchResult[i].replaceAll(value, `<span class="text-red">${value}</span>`)
+            autocomplete.appendChild(autocompleteLi)
         }
     }
 }
@@ -43,20 +41,21 @@ function recommend() {
 
 
 //검색
-function nameSearch() { 
+function nameSearch() {
     let result = document.querySelector('.result') //result에 result클래스를 가져옴 
-    result.innerHTML =  "" //result의 값 초기화
+    result.innerHTML = "" //result의 값 초기화
     let value = search.querySelector('input').value //변수search의 input 태그의 값을 value를 넣어준다 
-    staitionData.filter(({station_nm}) => station_nm == value).forEach(({station_nm,line_num}) => {
+    staitionData.filter(({
+        station_nm
+    }) => station_nm == value).forEach(({
+        station_nm,
+        line_num
+    }) => {
         const st_nm = station_nm
         const li_num = line_num
         let node = document.createElement('div')
         result.appendChild(node)
         node.classList.add('res')
         node.innerHTML = `<div> ${st_nm}역</br> ${li_num}호선</div>`
-    }); 
- }
-
-
-
-
+    });
+}
