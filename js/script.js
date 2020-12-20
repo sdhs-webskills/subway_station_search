@@ -16,11 +16,14 @@ function recommend() {
         let autoSearch = staitionData.filter((rc) => { //staitionData 배열의 값들을 순차적으로 함수에 인자로 전달하고 실행하는것
             // console.log(rc.station_nm.indexOf(value))
             if (rc.station_nm.indexOf(value) != -1) { //rc에 필터된 station_nm의 input에 친 값이 없으면 -1이 나오는데 -1아 아니면 if 실헹
-                let result = rc.station_nm //
-                return result
+                return rc
             }
         })
-        let autoSearchResult = autoSearch.map((obj) => Object.values(obj)[0]);
+        let autoSearchResult = autoSearch.map((obj) =>{
+            return obj.station_nm
+
+        });
+    
         let autocomplete = document.querySelector('.autocomplete ul')
         
         autocomplete.innerHTML = ""
@@ -42,7 +45,7 @@ function recommend() {
 //검색
 function nameSearch() { 
     let result = document.querySelector('.result') //result에 result클래스를 가져옴 
-    result.innerHTML =  "" //result의 자식이 없어질때 까지 지운다 firstChild가 지워지면 두번재 자식이 firstChlid가 되서 계속 지워짐
+    result.innerHTML =  "" //result의 값 초기화
     let value = search.querySelector('input').value //변수search의 input 태그의 값을 value를 넣어준다 
     staitionData.filter(({station_nm}) => station_nm == value).forEach(({station_nm,line_num}) => {
         const st_nm = station_nm
