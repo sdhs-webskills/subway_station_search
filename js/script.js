@@ -58,4 +58,6 @@ function nameSearch() {
         node.classList.add('res')
         node.innerHTML = `<div> ${st_nm}역</br> ${li_num}호선</div>`
     });
+
+    l
 }
